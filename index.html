@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title> Para-Ctrl: Intensity Controllable Style Transfer Speech Synthesis based on Codec Language Model</title>
+  <!-- Include custom CSS -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Include Google Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/custom.css">
+	<link rel="stylesheet" href="css/normalize.css">
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* General Styles */
+        body {
+          font-family: 'Open Sans', sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f9fafc;
+          color: #333;
+          line-height: 1.6;
+        }
+    
+        h1, h2, h3, h4 {
+          font-family: 'Roboto', sans-serif;
+          font-weight: 700;
+          margin: 0;
+        }
+    
+        p {
+          margin: 0 0 1.5rem;
+        }
+    
+        a {
+          color: #007bff;
+          text-decoration: none;
+        }
+    
+        a:hover {
+          text-decoration: underline;
+        }
+    
+        /* Header */
+        header {
+          background: linear-gradient(90deg, #2c3e50, #34495e);
+          color: #fff;
+          padding: 2rem 1rem;
+          text-align: center;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    
+        header h1 {
+          font-size: 2rem;
+          margin-bottom: 0.5rem;
+        }
+    
+        header p {
+          font-size: 1rem;
+          font-weight: 300;
+        }
+    
+        /* Container */
+        .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 2rem 1rem;
+        }
+    
+        /* Sections */
+        .section {
+          margin-bottom: 3rem;
+        }
+    
+        .section h2 {
+          font-size: 1.8rem;
+          margin-bottom: 1rem;
+          color: #2c3e50;
+          text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+          border-bottom: 2px solid #e74c3c;
+          display: inline-block;
+          padding-bottom: 0.3rem;
+        }
+    
+        .section p {
+          font-size: 1rem;
+          color: #555;
+        }
+    
+        /* Images and Figures */
+        figure {
+          margin: 2rem 0;
+          text-align: center;
+        }
+    
+        figure img {
+          max-width: 100%;
+          height: auto;
+          border-radius: 8px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    
+        figure figcaption {
+          font-size: 0.9rem;
+          color: #666;
+          margin-top: 0.5rem;
+        }
+    
+        /* Tables */
+        table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1.5rem 0;
+          background: #fff;
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+    
+        th, td {
+          padding: 1rem;
+          text-align: left;
+          border-bottom: 1px solid #ddd;
+        }
+    
+        th {
+          background-color: #2c3e50;
+          color: #fff;
+          font-weight: 600;
+        }
+    
+        td {
+          font-size: 0.95rem;
+          color: #555;
+        }
+    
+        tbody tr:hover {
+          background-color: #f2f2f2;
+        }
+    
+        /* Audio Player */
+        audio {
+          width: 100%;
+          max-width: 250px;
+          margin-top: 0.5rem;
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+    
+        /* Footer */
+        footer {
+          background: #2c3e50;
+          color: #fff;
+          text-align: center;
+          padding: 1rem 0;
+          font-size: 0.9rem;
+        }
+    
+        /* Utility Classes */
+        .text-center {
+          text-align: center;
+        }
+    
+        .highlight {
+          color: #e74c3c;
+          font-weight: 600;
+        }
+    
+        .card {
+          background: #fff;
+          border-radius: 8px;
+          padding: 1.5rem;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          margin-bottom: 2rem;
+        }
+    
+        .card h3 {
+          font-size: 1.4rem;
+          margin-bottom: 1rem;
+        }
+    
+        .card p {
+          font-size: 0.95rem;
+          color: #555;
+        }
+    
+        /* Responsive Design */
+        @media (max-width: 768px) {
+          header h1 {
+            font-size: 1.5rem;
+          }
+    
+          header p {
+            font-size: 0.9rem;
+          }
+    
+          .section h2 {
+            font-size: 1.5rem;
+          }
+    
+          table {
+            font-size: 0.85rem;
+          }
+        }
+      </style>
+</head>
+<body>
+    <header>
+        <h1>Para-Ctrl: Intensity Controllable Style Transfer Speech Synthesis based on Codec Language Model</h1>
+    </header>
+
+<p><br /></p>
+  <main>
+    <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">		
+        <h2 class="title is-4">Abstract</h2>
+        <p>In recent years, Text-to-Speech (TTS) technology has made significant advancements, with language model (LM)-based TTS systems emerging as the leading approach. These systems have shown remarkable capabilities in zero-shot speech synthesis, approaching human-level speech quality. However, challenges remain in style transfer, particularly with issues such as prosody averaging and speaker leakage. These limitations stem from conflicts in style information at varying levels of granularity provided by different prompts. To address these challenges, we propose Para-Ctrl, a robust LM-based TTS framework designed to enhance style transfer. Para-Ctrl introduces a frame-level Style Transfer Pitch Predictor to bolster frame-level speaker information and style representation. It also incorporates a Speaker Speaking Style Alignment module to improve style expressiveness while maintaining speaker identity, offering precise control over style intensity in synthesized speech. Experimental results demonstrate that Para-Ctrl effectively overcomes the limitations of existing methods, delivering superior style transfer performance and enabling fine-grained manipulation of style intensity.</p>
+        <br><br><p>This page shows the samples in the paper "<strong>Para-Ctrl: Intensity Controllable Style Transfer Speech Synthesis based on Codec Language Model</strong>".</p>
+    </div>
+
+
+    <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">		
+        <h2 class="title is-4">Overview</h2>
+        <figure class="image">
+          <img src="ctrl.png" alt="Overview">
+          <br>
+          <p style="font-style: italic; margin-top: 8px;">
+            <b>Figure 1.</b> 
+            The Overall Framework of Para-Ctrl: Solid lines represent the actual inference process, while dashed lines indicate steps completed in advance. Arrows denote the direction of alignment.
+          </p>
+        </figure>
+    </div>
+
+
+    <style>
+        .audio-table {
+            /* background: linear-gradient(145deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 1rem;
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15); */
+            overflow-x: auto;
+        }
+        
+        /* .audio-table table {
+            min-width: 1200px;
+            border-collapse: separate;
+            border-spacing: 0 1rem;
+        } */
+        
+        /* .audio-table thead th {
+            background: #2c3e50;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            padding: 1.2rem;
+            font-size: 0.95em;
+        } */
+        
+        /* .audio-table tbody tr {
+            background: white;
+            transition: all 0.3s ease;
+            border-radius: 0.8rem;
+        } */
+        
+        /* .audio-table tbody tr:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+        } */
+        
+        .text-column {
+            width: 1000px;
+            white-space: nowrap;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #495057;
+        }
+        
+        audio {
+            width: 180px;
+            height: 40px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        
+        .section-title {
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 700;
+            color: #2c3e50;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            /* margin-bottom: 2rem; */
+        }
+        </style>
+
+      <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+        <h2 class="title is-4">Comparison with Other Methods</h2>
+        <br>
+        <div class="audio-table p-4">
+            <table class="w-100">
+        <thead>
+          <tr>
+          <th style="text-align: center;">Emotion</th>
+          <th style="text-align: center;">Source</th>
+          <th style="text-align: center;">Target Speaker</th>
+          <th style="text-align: center;">Text</th>
+          <th style="text-align: center;">GPT-SoVITS</th>
+          <th style="text-align: center;">CosyVoice</th>
+          <th style="text-align: center;">Our Method</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr> 
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/8417054.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-M-08_000575.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-M-08_4.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-M-08_4.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-M-08_4.wav" /></audio></td>
+          </tr> -->
+          <tr>
+            <td>angry</td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/8417057.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-M-16_000037_0001.wav" /></audio></td>
+            <td class="text-column p-4">更可气的是，他莫名其妙的就成为了最后的赢家！</td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-M-16_0.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-M-16_0.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-M-16_0.wav" /></audio></td>
+          </tr>
+          <!-- <tr>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/8416032.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-M-08_000575.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-M-08_17.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-M-08_17.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-M-08_17.wav" /></audio></td>
+          </tr> -->
+          <tr>
+            <td>happy</td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/8416052.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-M-16_000037_0001.wav" /></audio></td>
+            <td class="text-column p-4">今天的阳光特别明媚，心情也跟着变得无比灿烂！</td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-M-16_6.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-M-16_6.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-M-16_6.wav" /></audio></td>
+          </tr>
+          <tr>
+            <td>comfort</td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/8415006.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-M-08_000575.wav" /></audio></td>
+            <td class="text-column p-4">记住，乌云终会散去，阳光总会照耀在你身上。</td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-M-08_1.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-M-08_1.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-M-08_1.wav" /></audio></td>
+          </tr>
+          <!-- <tr>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/8415253.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-M-16_000037_0001.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-M-16_2.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-M-16_2.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-M-16_2.wav" /></audio></td>
+          </tr> -->
+          <!-- <tr>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/8419002.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-M-08_000575.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-M-08_8.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-M-08_8.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-M-08_8.wav" /></audio></td>
+          </tr> -->
+          <tr>
+            <td>sad</td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/8419170.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-M-10_000649.wav" /></audio></td>
+            <td class="text-column p-4">我站在窗前，看着外面的世界，却感到无比的孤独。</td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-M-10_14.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-M-10_14.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-M-10_14.wav" /></audio></td>
+          </tr>
+          <tr>
+            <td>comfort</td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/0315070.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/0111050306.wav" /></audio></td>
+            <td class="text-column p-4">记住，乌云终会散去，阳光总会照耀在你身上。</td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/0111050306_1.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/0111050306_1.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/0111050306_1.wav" /></audio></td>
+          </tr>
+          <!-- <tr>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/0315084.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-F-19_000436.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-F-19_10.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-F-19_10.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-F-19_10.wav" /></audio></td>
+          </tr> -->
+          <tr>
+            <td>happy</td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/0316122.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-F-18_000286.wav" /></audio></td>
+            <td class="text-column p-4">这份喜悦让我想要大声欢呼，真是太棒了！</td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-F-18_15.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-F-18_15.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-F-18_15.wav" /></audio></td>
+          </tr>
+          <!-- <tr>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/0316251.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-F-08_000937.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-F-08_18.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-F-08_18.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-F-08_18.wav" /></audio></td>
+          </tr> -->
+          <tr>
+            <td>surprise</td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/0318003.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-F-08_000937.wav" /></audio></td>
+            <td class="text-column p-4">天啊！这真的是我一辈子都没有想过的画面！</td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-F-08_1.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-F-08_1.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-F-08_1.wav" /></audio></td>
+          </tr>
+          <!-- <tr>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/0318279.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-F-19_000436.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-F-19_19.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-F-19_19.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-F-19_19.wav" /></audio></td>
+          </tr> -->
+          <tr>
+            <td>sad</td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/0319043.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/0111050306.wav" /></audio></td>
+            <td class="text-column p-4">我感觉整个世界都在我眼前崩塌，无法承受这样的痛苦。</td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/0111050306_5.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/0111050306_5.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/0111050306_5.wav" /></audio></td>
+          </tr>
+          <!-- <tr>
+            <td><audio controls="" preload="auto"><source src="wav/ref_wav/0319084.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/ref_spk/DB-CN-F-08_000937.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/GPTSoVITS/DB-CN-F-08_4.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/cosyvoice/DB-CN-F-08_4.wav" /></audio></td>
+            <td><audio controls="" preload="auto"><source src="wav/our/DB-CN-F-08_4.wav" /></audio></td>
+          </tr> --> 
+        </tbody>
+        </table>
+        </div>
+        <br>
+        <br>
+      
+        <br>
+      
+
+        
+        </div>
+
+
+      <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+
+        <h2 class="title is-4">Intensity Control</h2>
+
+        <p></p>
+
+        <div class="audio-table p-4">
+            <table class="w-100">
+          <thead>
+            <!-- 第一行 -->
+            <tr>  
+              <th rowspan="2">Emotion</th>
+              <th rowspan="2" style="text-align: center;">Text</th>
+              <th colspan="7" style="text-align: center;">Scale</th>
+            </tr>
+            <!-- 第二行 -->
+            <tr>
+              <th style="text-align: center;">0.0</th>
+              <th style="text-align: center;">0.4</th>
+              <th style="text-align: center;">0.8</th>
+              <th style="text-align: center;">1.2</th>
+              <th style="text-align: center;">1.6</th>
+              <th style="text-align: center;">2.0</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>angry</td>
+              <td class="text-column p-4">我已经不想再跟你争论下去了，真是气死我了！</td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/angry/8401006009_11.wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/angry/8401006009_11 (1).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/angry/8401006009_11 (2).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/angry/8401006009_11 (3).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/angry/8401006009_11 (4).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/angry/8401006009_11 (5).wav" /></audio></td>
+            </tr>
+            <tr>
+              <td>comfort</td>
+              <td class="text-column p-4">无论发生了什么，我都会在你身边，支持你走过这段困难的时光。</td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/comfort/8401006009_0.wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/comfort/8401006009_0 (1).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/comfort/8401006009_0 (2).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/comfort/8401006009_0 (3).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/comfort/8401006009_0 (4).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/comfort/8401006009_0 (5).wav" /></audio></td>
+            </tr>
+            <tr>
+              <td>happy</td>
+              <td class="text-column p-4">这一天让我感到无比快乐，仿佛一切都在向好的方向发展。</td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/happy/8401006009_0.wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/happy/8401006009_0 (1).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/happy/8401006009_0 (2).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/happy/8401006009_0 (3).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/happy/8401006009_0 (4).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/happy/8401006009_0 (5).wav" /></audio></td>
+            </tr>
+            <tr>
+              <td>sad</td>
+              <td class="text-column p-4">失去的东西无法再回来，这种感觉让我感到无比绝望。</td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/sad/0111050306_17.wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/sad/0111050306_17 (1).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/sad/0111050306_17 (2).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/sad/0111050306_17 (3).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/sad/0111050306_17 (4).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/sad/0111050306_17 (5).wav" /></audio></td>
+            </tr>
+            <tr>
+              <td>surprise</td>
+              <td class="text-column p-4">我简直不敢相信这是真的，这件事太出乎意料了！</td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/surprise/0313004009_0.wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/surprise/0313004009_0 (1).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/surprise/0313004009_0 (2).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/surprise/0313004009_0 (3).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/surprise/0313004009_0 (4).wav" /></audio></td>
+              <td><audio controls="" preload="auto"><source src="wav/scale/surprise/0313004009_0 (5).wav" /></audio></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+        </div>
+
+
+
+
+  </main>
+  <footer>
+    <p>© 2024 <strong>Para-Ctrl</strong>. All rights reserved.</p>
+  </footer>
+</body>
+</html>
+
+
+
+
